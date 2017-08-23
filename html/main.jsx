@@ -86,7 +86,7 @@ class Signin extends React.Component {
 	  	console.log(response.data);
 	    if(response.data == 'Success'){
 	    	console.log("Home");
-	      window.location.assign('http://localhost:7777/home')
+	      window.location.assign('/home')
 	    }
 	  })
 	  .catch(function (error) {
