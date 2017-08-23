@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var url = 'mongodb://localhost:27017/Blog';
+var url = 'mongodb://ngotruongdat381:always13smile@ds153113.mlab.com:53113/ntd';
  
 module.exports = {
     addPost: function(title, subject, callback){
