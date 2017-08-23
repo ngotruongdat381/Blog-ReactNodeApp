@@ -30,6 +30,7 @@ app.post('/signin', function (req, res) {
 })
 
 app.post('/signup', function (req, res) {
+  console.log('signup-app');
   var name=req.body.name;
   var email=req.body.email;
   var password=req.body.password;

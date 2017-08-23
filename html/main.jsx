@@ -19,6 +19,7 @@ class Signup extends React.Component{
 	}
 
 	signUp(){
+		console.log('signup-main');
 	    axios.post('/signup', {
 	      name: this.state.name,
 	      email: this.state.email,
