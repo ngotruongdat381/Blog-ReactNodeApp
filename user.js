@@ -15,10 +15,11 @@ module.exports = {
 			});
 		});
 	},
-	getUserInfo: function(username, callback){
+	getUserInfo: function(email, callback){
+		console.log('getUserInfo - user.js')
 		MongoClient.connect(url, function(err, db){
 			
-			db.collection('user').findOne( { email : username 
+			db.collection('user').findOne( { email : email 
 			},function(err, result){
 				if(result==null){
 					console.log('returning false')
@@ -31,10 +32,10 @@ module.exports = {
 			});
 		});
 	},
-	updateProfile: function(name, password, username, callback){
+	updateProfile: function(name, password, email, callback){
 		MongoClient.connect(url, function(err, db) {
 		  	db.collection('user').updateOne( 
-		  		{ "email": username },
+		  		{ "email": email },
 		  		{ $set: 
 		  			{ "name" : name,
 		  			  "password" : password 
@@ -51,10 +52,10 @@ module.exports = {
 			});
 		});
 	},
-	validateSignIn: function(username, password,callback){
+	validateSignIn: function(email, password,callback){
 		MongoClient.connect(url, function(err, db){
 			
-			db.collection('user').findOne( { email : username ,password: password 
+			db.collection('user').findOne( { email : email ,password: password 
 			},function(err, result){
 				if(result==null){
 					console.log('returning false')

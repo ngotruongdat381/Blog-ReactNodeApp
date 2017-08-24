@@ -113,7 +113,6 @@ class Signup extends React.Component{
   }
 }
 
-
 ReactDOM.render(
     <Router history={hashHistory}>
         <Route component={Signin} path="/"></Route>

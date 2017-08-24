@@ -21,7 +21,7 @@ app.get('/', function(req,res){
 })
 
 app.get('/home', function (req, res) {
-  if(sessions && sessions.username){
+  if(sessions && sessions.email){
     res.sendFile(__dirname + '/html/home.html');
   }
   else{
@@ -31,11 +31,13 @@ app.get('/home', function (req, res) {
 
 app.post('/signin', function (req, res) {
   sessions=req.session;
-  var user_name=req.body.email;
+  var email=req.body.email;
+  var user_name=req.body.name;
   var password=req.body.password;
-  user.validateSignIn(user_name,password,function(result){
+  user.validateSignIn(email,password,function(result){
     if(result){
       sessions.username = user_name;
+      sessions.email = email;
       res.send('success');
     }
     else{
@@ -64,7 +66,7 @@ app.post('/addpost', function (req, res) {
   console.log('id is ',id);
   if(id == '' || id == undefined){
     console.log('add');
-    post.addPost(title, subject ,function(result){
+    post.addPost(sessions.username, title, subject ,function(result){
       res.send(result);
     }); 
   }
@@ -100,7 +102,9 @@ app.post('/deletePost', function(req,res){
 })
 
 app.post('/getProfile', function(req,res){
-  user.getUserInfo(sessions.username, function(result){
+  console.log('getProfile');
+  console.log(sessions.email);
+  user.getUserInfo(sessions.email, function(result){
     res.send(result)
   })
 })
@@ -112,6 +116,13 @@ app.post('/getPostWithId', function(req,res){
   })
 })
 
+app.post('/getPostWithUser', function(req,res){
+  console.log('app.js getPostWithUser');
+  console.log(sessions.username);
+  post.getPostWithUser(sessions.username, function(result){
+    res.send(result)
+  })
+})
 
 app.listen(process.env.PORT || 7777,function(){
     console.log("Started listening on port", 7777);

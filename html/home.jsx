@@ -23,8 +23,8 @@ class AddPost extends React.Component {
       document.getElementById('profileHyperlink').className = "";
       this.getPostWithId();
     }
-    addPost(){
 
+    addPost(){
       axios.post('/addPost', {
         title: this.state.title,
         subject: this.state.subject,
@@ -177,6 +177,7 @@ class ShowPost extends React.Component {
       this.updatePost = this.updatePost.bind(this);
       this.deletePost = this.deletePost.bind(this);
       this.getPost = this.getPost.bind(this);
+      this.getPostWithUser = this.getPostWithUser.bind(this);
       this.state = {
         posts:[]
       };
@@ -215,10 +216,23 @@ class ShowPost extends React.Component {
       });
     }
     
+    getPostWithUser() {
+      var self = this;
+      axios.post('/getPostWithUser', {
+      })
+      .then(function (response) {
+        console.log('res is ',response);
+        self.setState({posts:response.data})
+      })
+      .catch(function (error) {
+        console.log('error is ',error);
+      });
+    }
 
     componentDidMount(){
-      this.getPost();
+      //this.getPost();
 
+      this.getPostWithUser();
       document.getElementById('homeHyperlink').className = "active";
       document.getElementById('addHyperLink').className = "";
       document.getElementById('profileHyperlink').className = "";
@@ -262,6 +276,7 @@ class ShowPost extends React.Component {
 ReactDOM.render(
     <Router history={hashHistory}>
         <Route component={ShowPost} path="/"></Route>
+        <Route component={ShowPost} path="/showMyPosts"></Route>
         <Route component={AddPost} path="/addPost(/:id)"></Route>
         <Route component={ShowProfile} path="/showProfile"></Route>
     </Router>,
