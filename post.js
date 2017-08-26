@@ -2,10 +2,10 @@ var mongodb = require('mongodb');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var url = 'mongodb://ngotruongdat381:always13smile@ds153113.mlab.com:53113/ntd';
-var postDB_name = 'post02';
+var postDB_name = 'post03';
 
 module.exports = {
-	addPost: function(username, title, subject, callback){
+	addPost: function(username, email, title, subject, callback){
 		MongoClient.connect(url, function(err, db) {
 		  	db.collection(postDB_name).insertOne( {
 				"title": title,
@@ -13,7 +13,8 @@ module.exports = {
                 "date": new Date(),
                 author: {
                   "id": new mongodb.ObjectId(),
-                  "name": username
+				  "name": username,
+				  "email": email
                  }
 			},function(err, result){
 				assert.equal(err, null);
@@ -98,14 +99,11 @@ module.exports = {
         })
     },
     
-    getPostWithUser: function(username, callback){
-        console.log("getPostWithUser ");
-        console.log(username);
-        console.log("--- ");
+    getPostWithUser: function(email, callback){
         MongoClient.connect(url, function(err, db){
             db.collection(postDB_name, function (err, collection) {
                 collection.find({
-                "author.name": "Rick" 
+                "author.email": email 
              }).toArray(function (err, list) {
                     callback(list);
                 });

@@ -4,6 +4,16 @@ var hashHistory = window.ReactRouter.hashHistory;
 var browserHistory = window.ReactRouter.browserHistory;
 var Link = window.ReactRouter.Link;
 
+
+var ChangeStatus = function (activeLink) {
+  document.getElementById('addHyperLink').className = "";
+  document.getElementById('wallHyperlink').className = "";
+  document.getElementById('homeHyperlink').className = "";
+  document.getElementById('profileHyperlink').className = "";
+
+  document.getElementById(activeLink).className = "active";
+}
+
 class AddPost extends React.Component {
     constructor(props) {
       super(props);
@@ -229,15 +239,49 @@ class ShowPost extends React.Component {
       });
     }
 
-    componentDidMount(){
-      //this.getPost();
+    // componentDidMount(){
+    //   //console.log("window.location.href: ",window.location.pathname);
+    //   //console.dir();
+    //   //console.log("this.props:",this.props);
+    //   //console.log("this.props.navigation.state.key:",this.props.navigation.state.key);
 
-      this.getPostWithUser();
-      document.getElementById('homeHyperlink').className = "active";
-      document.getElementById('addHyperLink').className = "";
-      document.getElementById('profileHyperlink').className = "";
+    //   if (window.location.pathname != "/home"){
+    //     this.getPost();
+    //   }
+    //   else{
+    //     this.getPostWithUser();
+    //   }
+    //   document.getElementById('homeHyperlink').className = "active";
+    //   document.getElementById('addHyperLink').className = "";
+    //   document.getElementById('profileHyperlink').className = "";
+    // }
+
+    componentWillReceiveProps(nextProps) {
+      //console.log("componentWillReceiveProps:",nextProps);
+      console.log("this.props.Router:",this.props.router.location.pathname);
+      if (this.props.router.location.pathname == "/"){
+        console.log("getPost");
+        ChangeStatus("homeHyperlink");
+        this.getPost();
+      }
+      else if (this.props.router.location.pathname == "/showMyPosts"){
+        console.log("getPostWithUser");
+        ChangeStatus("wallHyperlink");
+        this.getPostWithUser();
+      }
+      // document.getElementById('homeHyperlink').className = "active";
+      // document.getElementById('addHyperLink').className = "";
+      // document.getElementById('profileHyperlink').className = "";
     }
-    
+
+    // componentWillUpdate(){
+    //   console.log("componentWillUpdate - window.location.href: ",window.location.pathname);
+    // }
+
+    // componentDidUpdate() {
+    //   console.log("componentDidUpdate - window.location.href: ",window.location.pathname);
+    // }
+
     render() {
 
       return(

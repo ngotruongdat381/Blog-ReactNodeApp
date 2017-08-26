@@ -66,7 +66,7 @@ app.post('/addpost', function (req, res) {
   console.log('id is ',id);
   if(id == '' || id == undefined){
     console.log('add');
-    post.addPost(sessions.username, title, subject ,function(result){
+    post.addPost(sessions.username, sessions.email, title, subject ,function(result){
       res.send(result);
     }); 
   }
@@ -117,9 +117,7 @@ app.post('/getPostWithId', function(req,res){
 })
 
 app.post('/getPostWithUser', function(req,res){
-  console.log('app.js getPostWithUser');
-  console.log(sessions.username);
-  post.getPostWithUser(sessions.username, function(result){
+  post.getPostWithUser(sessions.email, function(result){
     res.send(result)
   })
 })
