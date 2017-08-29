@@ -2,7 +2,7 @@ var mongodb = require('mongodb');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 var url = 'mongodb://ngotruongdat381:always13smile@ds153113.mlab.com:53113/ntd';
-var postDB_name = 'post03';
+var postDB_name = 'post04';
 
 module.exports = {
 	addPost: function(username, email, title, subject, callback){
@@ -14,7 +14,8 @@ module.exports = {
                 author: {
                   "id": new mongodb.ObjectId(),
 				  "name": username,
-				  "email": email
+				  "email": email,
+				  "comments":[]
                  }
 			},function(err, result){
 				assert.equal(err, null);
@@ -109,7 +110,48 @@ module.exports = {
                 });
              });
         })
-    }
+	},
+	
+	getContent: function(id, callback){
+
+		MongoClient.connect(url, function(err, db){
+			 db.collection(postDB_name).findOne({
+			 	_id: new mongodb.ObjectID(id)
+			 },
+			 function(err, result){
+				assert.equal(err, null);
+		    	console.log("Retrived the entry.");
+		    	if(err == null){
+		    		callback(result)
+		    	}
+		    	else{
+		    		callback(false)
+		    	}
+			});
+		})
+	},
+
+	addComment: function(id, email, comment, callback){
+		MongoClient.connect(url, function(err, db) {
+			db.collection(postDB_name).updateOne( 
+				{ "_id": new mongodb.ObjectID(id) },
+				{ $push: 
+					{ "comments" : { "comment": comment, "email": email }
+ 
+					}
+				},function(err, result){
+			  assert.equal(err, null);
+			  console.log("Updated the cmt details.");
+			  if(err == null){
+				  callback(true)
+			  }
+			  else{
+				  callback(false)
+			  }
+		  });
+		});
+	},
+
 }
 
 

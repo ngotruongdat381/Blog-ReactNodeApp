@@ -51,9 +51,7 @@ class AddPost extends React.Component {
 
     getPostWithId(){
       var id = this.props.params.id;
-      
       var self = this;
-      
       axios.post('/getPostWithId', {
         id: id
       })
@@ -92,6 +90,129 @@ class AddPost extends React.Component {
                   
                 <button type="button" onClick={this.addPost} id="submit" name="submit" className="btn btn-primary pull-right">Add Post</button>
               </form>
+          </div>
+        </div>
+      )
+    }
+}
+
+class ShowContent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.getContent = this.getContent.bind(this);
+      this.addComment = this.addComment.bind(this);
+      this.handleCommentChange = this.handleCommentChange.bind(this);
+      this.state = {
+        title:'',
+        subject:'',
+        posted:'',
+        authoremail:'',
+        comments:[],
+        comment:'',
+        id:''
+      };
+    }
+
+    //improve later
+    showNewComment() {
+        const element = (
+          <div>
+            <div>{comment.email}</div>
+            <div>{comment}</div>
+          </div>
+        );
+        ReactDOM.render(
+          element,
+          document.getElementById('comment-box')
+        );
+    }
+
+    addComment(){
+      console.log("addComment");
+      var id = this.props.params.id;
+      axios.post('/addComment', {
+        id:id,
+        comment: this.state.comment
+      })
+      .then(function (response) {
+        console.log('reponse from add comment is ',response);
+        //hashHistory.push('/post/' + id);
+        window.location.reload();   //a bit slow => Improve later
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+
+    getContent(){
+      var id = this.props.params.id;
+      var self = this;
+      axios.post('/getContent', {
+        id: id
+      })
+      .then(function (response) {
+        console.log(response.data);
+        if(response){
+          self.setState({title:response.data.title});
+          self.setState({subject:response.data.subject});
+          self.setState({posted:response.data.date});
+          self.setState({authoremail:response.data.author.email});
+          self.setState({comments:response.data.comments});
+        }
+      })
+      .catch(function (error) {
+        console.log('error is ',error);
+      });
+
+    }
+
+    componentDidMount(){
+      document.getElementById('addHyperLink').className = "";
+      document.getElementById('homeHyperlink').className = "";
+      document.getElementById('profileHyperlink').className = "";
+      this.getContent();
+    }
+
+    handleCommentChange(e){
+      this.setState({comment:e.target.value})
+    }
+
+    render() {
+      return (
+        <div className="col-md-5">
+          <div className="form-area">  
+              <div role="form">
+                <br styles="clear:both" />
+                <div className="form-group">
+                  <h1 name="title" id="title"> {this.state.title} </h1>
+                  <div> {this.state.posted} </div>
+                  <div> {this.state.authoremail} </div>
+                </div>
+               
+                <div className="form-group">
+                  <p id="subject">{this.state.subject}</p>
+                </div>
+              </div>
+
+              <div className="comment" id="comment-box">
+                <h2>Comment</h2>          
+                {
+                this.state.comments.map(function(comment,index) {
+                   return <div key={index}  >
+                            <div>{comment.email}</div>
+                            <div>{comment.comment}</div>
+                          </div>
+                }.bind(this))
+                }
+                <form>
+                  <div className="form-group">
+                    <textarea value={this.state.comment} className="form-control" onChange={this.handleCommentChange} type="textarea" id="subject" maxlength="140" rows="7"></textarea>
+                  </div>
+              
+                  <button type="button" onClick={this.addComment} id="submit" name="submit" className="btn btn-primary pull-right">Comment</button>
+                </form>
+              </div>
+
           </div>
         </div>
       )
@@ -185,6 +306,7 @@ class ShowPost extends React.Component {
     constructor(props) {
       super(props);
       this.updatePost = this.updatePost.bind(this);
+      this.showPost = this.showPost.bind(this);
       this.deletePost = this.deletePost.bind(this);
       this.getPost = this.getPost.bind(this);
       this.getPostWithUser = this.getPostWithUser.bind(this);
@@ -196,6 +318,10 @@ class ShowPost extends React.Component {
 
     updatePost(id){
       hashHistory.push('/addPost/' + id);
+    }
+
+    showPost(id){
+      hashHistory.push('/post/' + id);
     }
 
     deletePost(id){
@@ -239,25 +365,7 @@ class ShowPost extends React.Component {
       });
     }
 
-    // componentDidMount(){
-    //   //console.log("window.location.href: ",window.location.pathname);
-    //   //console.dir();
-    //   //console.log("this.props:",this.props);
-    //   //console.log("this.props.navigation.state.key:",this.props.navigation.state.key);
-
-    //   if (window.location.pathname != "/home"){
-    //     this.getPost();
-    //   }
-    //   else{
-    //     this.getPostWithUser();
-    //   }
-    //   document.getElementById('homeHyperlink').className = "active";
-    //   document.getElementById('addHyperLink').className = "";
-    //   document.getElementById('profileHyperlink').className = "";
-    // }
-
-    componentWillReceiveProps(nextProps) {
-      //console.log("componentWillReceiveProps:",nextProps);
+    componentWillReceiveProps() {
       console.log("this.props.Router:",this.props.router.location.pathname);
       if (this.props.router.location.pathname == "/"){
         console.log("getPost");
@@ -269,21 +377,9 @@ class ShowPost extends React.Component {
         ChangeStatus("wallHyperlink");
         this.getPostWithUser();
       }
-      // document.getElementById('homeHyperlink').className = "active";
-      // document.getElementById('addHyperLink').className = "";
-      // document.getElementById('profileHyperlink').className = "";
     }
 
-    // componentWillUpdate(){
-    //   console.log("componentWillUpdate - window.location.href: ",window.location.pathname);
-    // }
-
-    // componentDidUpdate() {
-    //   console.log("componentDidUpdate - window.location.href: ",window.location.pathname);
-    // }
-
     render() {
-
       return(
           <table className="table table-striped">
             <thead>
@@ -300,7 +396,7 @@ class ShowPost extends React.Component {
                 this.state.posts.map(function(post,index) {
                    return <tr key={index} >
                             <td>{index+1}</td>
-                            <td>{post.title}</td>
+                            <td onClick={this.showPost.bind(this,post._id)} >{post.title}</td>
                             <td>{post.subject}</td>
                             <td>
                               <span onClick={this.updatePost.bind(this,post._id)} className="glyphicon glyphicon-pencil"></span>
@@ -321,6 +417,7 @@ ReactDOM.render(
     <Router history={hashHistory}>
         <Route component={ShowPost} path="/"></Route>
         <Route component={ShowPost} path="/showMyPosts"></Route>
+        <Route component={ShowContent} path="/post(/:id)"></Route>
         <Route component={AddPost} path="/addPost(/:id)"></Route>
         <Route component={ShowProfile} path="/showProfile"></Route>
     </Router>,

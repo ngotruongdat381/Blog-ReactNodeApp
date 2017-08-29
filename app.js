@@ -122,6 +122,22 @@ app.post('/getPostWithUser', function(req,res){
   })
 })
 
+app.post('/getContent', function(req,res){
+  var id = req.body.id;
+  post.getContent(id, function(result){
+    res.send(result)
+  })
+})
+
+app.post('/addComment', function (req, res) {
+  var id = req.body.id;
+  var comment = req.body.comment;
+    post.addComment(id, sessions.email, comment ,function(result){
+      res.send(result);
+    }); 
+
+})
+
 app.listen(process.env.PORT || 7777,function(){
     console.log("Started listening on port", 7777);
 })
