@@ -14,6 +14,89 @@ var ChangeStatus = function (activeLink) {
   document.getElementById(activeLink).className = "active";
 }
 
+class ShowProfile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    this.updateProfile = this.updateProfile.bind(this);
+    this.getProfile = this.getProfile.bind(this);
+    this.state = {
+      name:'',
+      email:'',
+      password:'',
+      id:''
+    };
+    
+  }
+  componentDidMount(){
+    document.getElementById('addHyperLink').className = "";
+    document.getElementById('homeHyperlink').className = "";
+    document.getElementById('profileHyperlink').className = "active";
+    this.getProfile();
+  }
+  updateProfile(){
+    
+    var self = this;
+    axios.post('/updateProfile', {
+      name: this.state.name,
+      password: this.state.password
+    })
+    .then(function (response) {
+      if(response){
+        hashHistory.push('/')  
+      }
+    })
+    .catch(function (error) {
+      console.log('error is ',error);
+    });
+  }
+
+  handleNameChange(e){
+    this.setState({name:e.target.value})
+  }
+  handlePasswordChange(e){
+    this.setState({password:e.target.value})
+  }
+
+  getProfile(){
+    var self = this;
+    axios.post('/getProfile', {
+    })
+    .then(function (response) {
+      if(response){
+        self.setState({name:response.data.name});
+        self.setState({email:response.data.email});
+        self.setState({password:response.data.password});  
+      }
+    })
+    .catch(function (error) {
+      console.log('error is ',error);
+    });
+  }
+  
+  render() {
+    return (
+      <div className="col-lg-8 col-md-10 mx-auto">
+        <div className="form-area">  
+            <form role="form">
+              <br styles="clear:both" />
+              <div className="form-group">
+                <input value={this.state.name} type="text" onChange={this.handleNameChange} className="form-control" placeholder="Name" required />
+              </div>
+             
+              <div className="form-group">
+                <input value={this.state.password} type="password" onChange={this.handlePasswordChange} className="form-control" placeholder="Password" required />
+              </div>
+             
+              <button type="button" onClick={this.updateProfile} id="submit" name="submit" className="btn btn-primary pull-right">Update</button>
+            </form>
+        </div>
+      </div>
+    )
+  }
+}
+
 class AddPost extends React.Component {
     constructor(props) {
       super(props);
@@ -76,7 +159,7 @@ class AddPost extends React.Component {
     }
     render() {
       return (
-        <div className="col-md-5">
+        <div className="col-lg-8 col-md-10 mx-auto">
           <div className="form-area">  
               <form role="form">
                 <br styles="clear:both" />
@@ -155,7 +238,7 @@ class ShowContent extends React.Component {
         if(response){
           self.setState({title:response.data.title});
           self.setState({subject:response.data.subject});
-          self.setState({posted:response.data.date});
+          self.setState({posted:response.data.posted});
           self.setState({authoremail:response.data.author.email});
           self.setState({comments:response.data.comments});
         }
@@ -166,11 +249,17 @@ class ShowContent extends React.Component {
 
     }
 
+    // onBackButtonEvent(e){
+    //   e.preventDefault();
+    //   hashHistory.goBack();
+    // }
+
     componentDidMount(){
       document.getElementById('addHyperLink').className = "";
       document.getElementById('homeHyperlink').className = "";
       document.getElementById('profileHyperlink').className = "";
       this.getContent();
+      //window.onpopstate = this.onBackButtonEvent;
     }
 
     handleCommentChange(e){
@@ -178,39 +267,65 @@ class ShowContent extends React.Component {
     }
 
     render() {
+      if (this.state.posted !== undefined) {
+        console.log((new Date(this.state.posted)).toString());
+        var sdate = (this.state.posted).toString();
+        var short_date = sdate.substring(0,10);
+      }
+
       return (
-        <div className="col-md-5">
+        <div className="col-lg-8 col-md-10 mx-auto">
           <div className="form-area">  
               <div role="form">
-                <br styles="clear:both" />
-                <div className="form-group">
-                  <h1 name="title" id="title"> {this.state.title} </h1>
-                  <div> {this.state.posted} </div>
-                  <div> {this.state.authoremail} </div>
-                </div>
-               
-                <div className="form-group">
-                  <p id="subject">{this.state.subject}</p>
-                </div>
+                <br styles="clear:both" />               
+                <article>
+                  <header className="entry-header">
+                    <h1 className="entry-title">{this.state.title}</h1>    
+                  </header>
+                  <div className="entry-meta">
+                    <span className="byline">
+                      <i className="fa fa-user" aria-hidden="true"></i>
+                      <a>{this.state.authoremail}</a>     
+                    </span>
+                    <span className="published-on">
+                      <i className="fa fa-clock-o" aria-hidden="true"></i>
+                      <time className="entry-date published">{short_date}</time>  
+                    </span>
+                  </div>
+
+                  <div className="content">
+                    <div className="row">
+                        <p>{this.state.subject}</p>
+                      
+                    </div>
+                  </div>
+                </article>
               </div>
 
               <div className="comment" id="comment-box">
-                <h2>Comment</h2>          
-                {
-                this.state.comments.map(function(comment,index) {
-                   return <div key={index}  >
-                            <div>{comment.email}</div>
-                            <div>{comment.comment}</div>
-                          </div>
-                }.bind(this))
-                }
-                <form>
-                  <div className="form-group">
-                    <textarea value={this.state.comment} className="form-control" onChange={this.handleCommentChange} type="textarea" id="subject" maxlength="140" rows="7"></textarea>
+                <div className="card my-4">
+                  <h5 className="card-header">Leave a Comment:</h5>
+                  <div className="card-body">
+                    <form>
+                      <div className="form-group">
+                        <textarea className="form-control" value={this.state.comment} onChange={this.handleCommentChange} type="textarea" id="subject" maxlength="140" rows="3"></textarea>
+                      </div>
+                      <button type="submit" onClick={this.addComment} id="submit" name="submit" className="btn btn-primary">Comment</button>
+                    </form>
                   </div>
-              
-                  <button type="button" onClick={this.addComment} id="submit" name="submit" className="btn btn-primary pull-right">Comment</button>
-                </form>
+                </div>
+
+                {this.state.comments && this.state.comments.length > 0 &&
+                  this.state.comments.map(function(comment,index) {
+                    return <div className="media mb-4" key={index}  >
+                            <img className="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt=""/>
+                            <div className="media-body">
+                              <h5 className="mt-0">{comment.email}</h5>
+                              {comment.comment}
+                            </div>
+                            </div>
+                  }.bind(this))
+                }
               </div>
 
           </div>
@@ -219,88 +334,7 @@ class ShowContent extends React.Component {
     }
 }
 
-class ShowProfile extends React.Component {
-    constructor(props) {
-      super(props);
-      this.handleNameChange = this.handleNameChange.bind(this);
-      this.handlePasswordChange = this.handlePasswordChange.bind(this);
-      this.updateProfile = this.updateProfile.bind(this);
-      this.getProfile = this.getProfile.bind(this);
-      this.state = {
-        name:'',
-        email:'',
-        password:'',
-        id:''
-      };
-      
-    }
-    componentDidMount(){
-      document.getElementById('addHyperLink').className = "";
-      document.getElementById('homeHyperlink').className = "";
-      document.getElementById('profileHyperlink').className = "active";
-      this.getProfile();
-    }
-    updateProfile(){
-      
-      var self = this;
-      axios.post('/updateProfile', {
-        name: this.state.name,
-        password: this.state.password
-      })
-      .then(function (response) {
-        if(response){
-          hashHistory.push('/')  
-        }
-      })
-      .catch(function (error) {
-        console.log('error is ',error);
-      });
-    }
 
-    handleNameChange(e){
-      this.setState({name:e.target.value})
-    }
-    handlePasswordChange(e){
-      this.setState({password:e.target.value})
-    }
-
-    getProfile(){
-      var self = this;
-      axios.post('/getProfile', {
-      })
-      .then(function (response) {
-        if(response){
-          self.setState({name:response.data.name});
-          self.setState({email:response.data.email});
-          self.setState({password:response.data.password});  
-        }
-      })
-      .catch(function (error) {
-        console.log('error is ',error);
-      });
-    }
-    
-    render() {
-      return (
-        <div className="col-md-5">
-          <div className="form-area">  
-              <form role="form">
-                <br styles="clear:both" />
-                <div className="form-group">
-                  <input value={this.state.name} type="text" onChange={this.handleNameChange} className="form-control" placeholder="Name" required />
-                </div>
-               
-                <div className="form-group">
-                  <input value={this.state.password} type="password" onChange={this.handlePasswordChange} className="form-control" placeholder="Password" required />
-                </div>
-               
-                <button type="button" onClick={this.updateProfile} id="submit" name="submit" className="btn btn-primary pull-right">Update</button>
-              </form>
-          </div>
-        </div>
-      )
-    }
-}
 
 class ShowPost extends React.Component {
     constructor(props) {
@@ -310,6 +344,7 @@ class ShowPost extends React.Component {
       this.deletePost = this.deletePost.bind(this);
       this.getPost = this.getPost.bind(this);
       this.getPostWithUser = this.getPostWithUser.bind(this);
+      this.doShow = this.doShow.bind(this);
       this.state = {
         posts:[]
       };
@@ -365,7 +400,7 @@ class ShowPost extends React.Component {
       });
     }
 
-    componentWillReceiveProps() {
+    doShow() {
       console.log("this.props.Router:",this.props.router.location.pathname);
       if (this.props.router.location.pathname == "/"){
         console.log("getPost");
@@ -379,37 +414,55 @@ class ShowPost extends React.Component {
       }
     }
 
+    componentWillReceiveProps() {
+      console.log("componentWillReceiveProps");
+      this.doShow();
+    }
+
+    componentDidMount() {
+      console.log("componentDidMount");
+      this.doShow();
+    }
+
+
     render() {
       return(
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>Subject</th>
-                <th></th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                this.state.posts.map(function(post,index) {
-                   return <tr key={index} >
-                            <td>{index+1}</td>
-                            <td onClick={this.showPost.bind(this,post._id)} >{post.title}</td>
-                            <td>{post.subject}</td>
-                            <td>
-                              <span onClick={this.updatePost.bind(this,post._id)} className="glyphicon glyphicon-pencil"></span>
-                            </td>
-                            <td>
-                              <span onClick={this.deletePost.bind(this,post._id)} className="glyphicon glyphicon-remove"></span>
-                            </td>
-                          </tr>
-                }.bind(this))
+        <div className="col-lg-8 col-md-10 mx-auto">
+          <button type="button" onClick={this.updateProfile} id="submit" name="submit" className="btn btn-primary pull-right">Sort by Oldest</button>
+
+          {
+            this.state.posts.map(function(post,index) {
+              if (post.posted !== undefined) {
+                var sdate = (post.posted).toString();
+                var short_date = sdate.substring(0,10);
               }
-            </tbody>
-          </table>
-        )
+
+              return  <article className="post" key={index}>
+                        <header className="entry-header">
+                          <h1 className="entry-title" onClick={this.showPost.bind(this,post._id)}> {post.title}</h1>    
+                        </header> 
+                        <div className="entry-content">
+                          <p>{post.subject}</p> 
+                        </div>
+                      
+                        <footer className="entry-footer">
+                          <div className="entry-meta">
+                            <span className="byline">
+                              <i className="fa fa-user" aria-hidden="true"></i>
+                              <a>{post.author.email}</a>     
+                            </span>
+                            <span className="published-on">
+                              <i className="fa fa-clock-o" aria-hidden="true"></i>
+                              <time className="entry-date published" datetime={short_date}>{short_date}</time>  
+                            </span>
+                          </div>
+                        </footer>
+                      </article>
+          }.bind(this))
+        }
+        
+      </div>
+      )
     }
 }
 

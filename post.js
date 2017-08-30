@@ -10,7 +10,7 @@ module.exports = {
 		  	db.collection(postDB_name).insertOne( {
 				"title": title,
 				"subject": subject,
-                "date": new Date(),
+                "posted": new Date(),
                 author: {
                   "id": new mongodb.ObjectId(),
 				  "name": username,

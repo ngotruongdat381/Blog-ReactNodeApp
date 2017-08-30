@@ -11,7 +11,11 @@
     <title>React Blog App</title>
     <link href="bootstrap.min.css" rel="stylesheet">
     <link href="jumbotron-narrow.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link href="font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
     <script src="react.js"></script>
+    
   <script src="react-dom.js"></script>
   <script src="https://npmcdn.com/react-router@3.0.2/umd/ReactRouter.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -20,10 +24,39 @@
   </head>
 
   <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Ngo Truong Dat</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active"  id="homeHyperlink" >
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item" id="wallHyperlink">
+              <a class="nav-link" href="/home#/showMyPosts">Wall</a>
+            </li>
+            <li class="nav-item" id="addHyperLink">
+              <a class="nav-link" href="/home#/addPost">Add</a>
+            </li>
+            <li class="nav-item" id="profileHyperlink">
+              <a class="nav-link" href="/home#/showProfile">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/index.html#/">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
     <div class="container">
       <div class="header clearfix">
-        <nav>
+        <!-- <nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" id="homeHyperlink" class="active"><a href="#">Home</a></li>
             <li role="presentation" id="wallHyperlink" class=""><a href="/home#/showMyPosts">Wall</a></li>
@@ -32,7 +65,7 @@
             <li role="presentation"><a href="/index.html#/">Logout</a></li>
           </ul>
         </nav>
-        <h3 class="text-muted">React Blog App</h3>
+        <h3 class="text-muted">React Blog App</h3> -->
       <div id="app" >
         
       </div>

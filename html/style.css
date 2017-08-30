@@ -1,0 +1,53 @@
+body {
+    padding-top: 54px;
+    font-family: "Open Sans",sans-serif;
+    color: #383838;
+}
+
+@media (min-width: 992px) {
+    body {
+        padding-top: 56px;
+    }
+}
+
+.entry-title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 47px;
+    line-height: 1.3;
+}
+
+.entry-meta {
+    margin: .4375em 0 3.5em;
+    color: #b3b3b1;
+}
+
+.entry-meta > span {
+    margin-right: 1.3125em;
+    vertical-align: middle;
+    /*font-size: 14px; */
+}
+
+.entry-meta > span > i.fa {
+    margin-right: 0.5em;
+}
+
+.content {
+    font-size: 19px;
+    font-weight: 400;
+    word-wrap: break-word;
+    line-height: 1.75;
+    color: #383838;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+}
+
+article {
+    border-top: solid 1px #ddd;
+    margin-top: 1.75em;
+    padding-top: 1.75em;
+}
+
+form .form-group input#title {
+    font-family: 'Roboto Slab', serif;
+    font-size: 47px;
+    line-height: 1.3;
+}
