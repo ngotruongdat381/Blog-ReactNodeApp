@@ -428,7 +428,7 @@ class ShowPost extends React.Component {
     render() {
       return(
         <div className="col-lg-8 col-md-10 mx-auto">
-          <button type="button" onClick={this.updateProfile} id="submit" name="submit" className="btn btn-primary pull-right">Sort by Oldest</button>
+          {/* <button type="button" onClick={this.updateProfile} id="submit" name="submit" className="btn btn-primary pull-right">Sort by Oldest</button> */}
 
           {
             this.state.posts.map(function(post,index) {

@@ -16,17 +16,27 @@ app.use(express.static(path.join(__dirname,"/html")));
 
 app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get("/posts", function(req, res) {
+    post.getPost(function(result){
+        res.send(result);
+    });
+});
+
 app.get('/', function(req,res){
-  res.sendFile(__dirname + '/html/index.html');
+  res.sendFile(__dirname + '/html/home.html');
 })
 
 app.get('/home', function (req, res) {
-  if(sessions && sessions.email){
-    res.sendFile(__dirname + '/html/home.html');
-  }
-  else{
-    res.send('unauthorized');
-  }
+  res.sendFile(__dirname + '/html/home.html');
+
+  // if(sessions && sessions.email){
+  //   res.sendFile(__dirname + '/html/home.html');
+  // }
+  // else{
+  //   res.send('unauthorized');
+  // }
 })
 
 app.post('/signin', function (req, res) {
