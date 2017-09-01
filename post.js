@@ -21,7 +21,7 @@ module.exports = {
 				assert.equal(err, null);
 		    	console.log("Saved the blog post details.");
 		    	if(err == null){
-		    		callback(true)
+		    		callback(true);
 		    	}
 		    	else{
 		    		callback(false)
@@ -89,10 +89,15 @@ module.exports = {
 		})
 	},
 
-    getPost: function(callback){
+    getPost: function(newest, callback){
+		console.log(newest);
+		var s = -1;
+		if (newest != undefined && !newest) {
+			s = 1;
+		}
         MongoClient.connect(url, function(err, db){
              db.collection(postDB_name, function (err, collection) {
-                collection.find().toArray(function (err, list) {
+                collection.find().sort( { "posted": s } ).toArray(function (err, list) {
                     callback(list);
                 });
              });
@@ -104,7 +109,7 @@ module.exports = {
             db.collection(postDB_name, function (err, collection) {
                 collection.find({
                 "author.email": email 
-             }).toArray(function (err, list) {
+             }).sort( { "posted": -1 } ).toArray(function (err, list) {
                     callback(list);
                 });
              });

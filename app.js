@@ -114,7 +114,8 @@ app.post('/username', function(req, res){
 });
 
 app.post('/getpost', function (req, res) {
-  post.getPost(function(result){
+  var newest = req.body.newest;
+  post.getPost(newest, function(result){
     res.send(result);
   });
 })

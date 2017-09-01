@@ -89,6 +89,7 @@ class Signup extends React.Component{
     })
     .then(function (response) {
       console.log(response);
+      window.location.assign('/signin');
     })
     .catch(function (error) {
       console.log(error);

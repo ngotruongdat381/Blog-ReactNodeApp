@@ -70,3 +70,20 @@ form.form-signin .ask {
     margin-top: 10px;
     font-size: 14px;
 }
+
+.greeting {
+    margin-top: 30px;
+}
+
+#comment-box {
+    margin-top: 30px;
+}
+
+.floating-btn {
+    position: fixed;
+    z-index: 998;
+    right: 35px;
+    bottom: 35px;
+    padding-top: 15px;
+    margin-bottom: 0;
+}
