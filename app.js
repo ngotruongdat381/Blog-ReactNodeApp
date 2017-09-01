@@ -25,12 +25,21 @@ app.get("/posts", function(req, res) {
 });
 
 app.get('/', function(req,res){
-  res.sendFile(__dirname + '/html/home.html');
+  res.sendFile(__dirname + '/html/index.html');
 })
 
-app.get('/home', function (req, res) {
-  res.sendFile(__dirname + '/html/home.html');
+app.get('/user', function(req,res){
+  res.sendFile(__dirname + '/html/user.html');
+})
 
+
+app.get('/home', function (req, res) {
+  res.sendFile(__dirname + '/html/index.html');
+  if(req.session.email == undefined){
+    console.log("# Username not set in session yet");
+  } else {
+    console.log("# Username from session: "+ req.session.email);
+  }
   // if(sessions && sessions.email){
   //   res.sendFile(__dirname + '/html/home.html');
   // }
@@ -97,6 +106,12 @@ app.post('/updateProfile', function(req, res){
       res.send(result);
   })
 })
+
+//Save the username when the user posts the set username form
+app.post('/username', function(req, res){
+  req.session.save();
+  res.send(req.session);
+});
 
 app.post('/getpost', function (req, res) {
   post.getPost(function(result){

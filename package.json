@@ -1,12 +1,12 @@
 {
-  "name": "react-node-app",
+  "name": "react-app",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "roy",
+  "author": "ngotruongdat",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.1",

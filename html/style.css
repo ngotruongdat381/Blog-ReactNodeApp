@@ -65,3 +65,8 @@ form.form-signin {
 form.form-signin input {
     margin: 10px 0;
 } 
+
+form.form-signin .ask {
+    margin-top: 10px;
+    font-size: 14px;
+}

@@ -90,7 +90,6 @@ module.exports = {
 	},
 
     getPost: function(callback){
-        console.log("getPost");
         MongoClient.connect(url, function(err, db){
              db.collection(postDB_name, function (err, collection) {
                 collection.find().toArray(function (err, list) {

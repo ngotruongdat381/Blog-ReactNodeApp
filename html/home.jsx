@@ -6,12 +6,12 @@ var Link = window.ReactRouter.Link;
 
 
 var ChangeStatus = function (activeLink) {
-  document.getElementById('addHyperLink').className = "";
-  document.getElementById('wallHyperlink').className = "";
-  document.getElementById('homeHyperlink').className = "";
-  document.getElementById('profileHyperlink').className = "";
+  // document.getElementById('addHyperLink').className = "";
+  // document.getElementById('wallHyperlink').className = "";
+  // document.getElementById('homeHyperlink').className = "";
+  // document.getElementById('profileHyperlink').className = "";
 
-  document.getElementById(activeLink).className = "active";
+  // document.getElementById(activeLink).className = "active";
 }
 
 class ShowProfile extends React.Component {
@@ -249,17 +249,11 @@ class ShowContent extends React.Component {
 
     }
 
-    // onBackButtonEvent(e){
-    //   e.preventDefault();
-    //   hashHistory.goBack();
-    // }
-
     componentDidMount(){
       document.getElementById('addHyperLink').className = "";
       document.getElementById('homeHyperlink').className = "";
       document.getElementById('profileHyperlink').className = "";
       this.getContent();
-      //window.onpopstate = this.onBackButtonEvent;
     }
 
     handleCommentChange(e){
@@ -424,7 +418,6 @@ class ShowPost extends React.Component {
       this.doShow();
     }
 
-
     render() {
       return(
         <div className="col-lg-8 col-md-10 mx-auto">
@@ -466,12 +459,115 @@ class ShowPost extends React.Component {
     }
 }
 
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.checkSession = this.checkSession.bind(this);
+    this.logOut = this.logOut.bind(this);
+    this.state = {
+      useremail:''
+    };
+    
+  }
+
+  checkSession(){
+    var self = this;
+    axios.post('/username', {
+    })
+    .then(function (response) {
+      if(response){
+        console.log("data loaded: ", response.data.email);
+        self.setState({useremail:response.data.email})
+      }
+    })
+    .catch(function (error) {
+      console.log('error is ',error);
+    });
+  }
+
+  logOut() {
+    this.setState({useremail:''});
+  }
+
+  componentDidMount() {
+    console.log("componentDidMount");
+    this.checkSession();
+  }
+
+  render() {
+    return (
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div className="container">
+          <a className="navbar-brand" href="#">Ngo Truong Dat</a>
+          <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarResponsive">
+            {!this.state.useremail&&
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item active"  id="homeHyperlink" >
+                <a className="nav-link" href="#">Home
+                  <span className="sr-only">(current)</span>
+                </a>
+              </li>
+            
+              <li className="nav-item" id="SigninHyperlink">
+                <a className="nav-link" href="/user#/signin">Sign in</a>
+              </li>
+              <li className="nav-item" id="SignupHyperlink">
+                <a className="nav-link" href="/user#/signup">Sign up</a>
+              </li>
+            </ul>
+            }
+
+            {this.state.useremail&&
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item active"  id="homeHyperlink" >
+                <a className="nav-link" href="#">Home
+                  <span className="sr-only">(current)</span>
+                </a>
+              </li>
+              <li className="nav-item" id="wallHyperlink">
+                <a className="nav-link" href="/#/showMyPosts">Wall</a>
+              </li>
+              <li className="nav-item" id="addHyperLink">
+                <a className="nav-link" href="/#/addPost">Add</a>
+              </li>
+              <li className="nav-item" id="profileHyperlink">
+                <a className="nav-link" href="/#/showProfile">Profile</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" onClick={this.logOut} href="#">Logout</a>
+              </li>
+            </ul>
+            }
+
+          </div>
+        </div>
+      </nav>
+    );
+  }
+}
+
+class Layout extends React.Component {
+  render() {
+      return (
+          <div>
+              <Header />
+              {this.props.children}
+          </div>
+      )
+  }
+}
+
 ReactDOM.render(
+  <Layout>
     <Router history={hashHistory}>
         <Route component={ShowPost} path="/"></Route>
         <Route component={ShowPost} path="/showMyPosts"></Route>
         <Route component={ShowContent} path="/post(/:id)"></Route>
         <Route component={AddPost} path="/addPost(/:id)"></Route>
         <Route component={ShowProfile} path="/showProfile"></Route>
-    </Router>,
+    </Router>
+  </Layout>,
 document.getElementById('app'));
