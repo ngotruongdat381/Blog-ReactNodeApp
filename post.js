@@ -7,16 +7,16 @@ var postDB_name = 'post04';
 module.exports = {
 	addPost: function(username, email, title, subject, callback){
 		MongoClient.connect(url, function(err, db) {
-		  	db.collection(postDB_name).insertOne( {
+	  	db.collection(postDB_name).insertOne( {
 				"title": title,
 				"subject": subject,
-                "posted": new Date(),
-                author: {
-                  "id": new mongodb.ObjectId(),
+	      "posted": new Date(),
+	      author: {
+	        "id": new mongodb.ObjectId(),
 				  "name": username,
 				  "email": email,
 				  "comments":[]
-                 }
+	      }
 			},function(err, result){
 				assert.equal(err, null);
 		    	console.log("Saved the blog post details.");
@@ -52,7 +52,6 @@ module.exports = {
 	},
 
 	deletePost: function(id, callback){
-
 		MongoClient.connect(url, function(err, db){
 			 db.collection(postDB_name).deleteOne({
 			 	_id: new mongodb.ObjectID(id)
@@ -93,48 +92,48 @@ module.exports = {
 		if (newest != undefined && !newest) {
 			s = 1;
 		}
-        MongoClient.connect(url, function(err, db){
-             db.collection(postDB_name, function (err, collection) {
-                collection.find().sort( { "posted": s } ).toArray(function (err, list) {
-                    callback(list);
-                });
-             });
-        })
+      MongoClient.connect(url, function(err, db){
+		    db.collection(postDB_name, function (err, collection) {
+	        collection.find().sort( { "posted": s } ).toArray(function (err, list) {
+	            callback(list);
+	        });
+		    });
+      })
 	},
 	
 	getPost: function(callback){
-        MongoClient.connect(url, function(err, db){
-             db.collection(postDB_name, function (err, collection) {
-                collection.find().sort( { "posted": -1 } ).toArray(function (err, list) {
-                    callback(list);
-                });
-             });
-        })
+    MongoClient.connect(url, function(err, db){
+      db.collection(postDB_name, function (err, collection) {
+        collection.find().sort( { "posted": -1 } ).toArray(function (err, list) {
+            callback(list);
+        });
+      });
+    })
 	},
 	
 	getPostSearch: function(text, callback){
-        MongoClient.connect(url, function(err, db){
-             db.collection(postDB_name, function (err, collection) {
-                collection.find(
+    MongoClient.connect(url, function(err, db){
+      db.collection(postDB_name, function (err, collection) {
+        collection.find(
 					{ "$text": { "$search": text } },
 					{ "score": { "$meta": "textScore" } }
 				).sort( { "score": { "$meta": "textScore" } } ).toArray(function (err, list) {
-                    callback(list);
-                });
-             });
-        })
+	        callback(list);
+	      });
+	    });
+    })
 	},
 	
-    getPostWithUser: function(email, callback){
-        MongoClient.connect(url, function(err, db){
-            db.collection(postDB_name, function (err, collection) {
-                collection.find({
-                "author.email": email 
-             }).sort( { "posted": -1 } ).toArray(function (err, list) {
-                    callback(list);
-                });
-             });
-        })
+  getPostWithUser: function(email, callback){
+    MongoClient.connect(url, function(err, db){
+      db.collection(postDB_name, function (err, collection) {
+        collection.find({
+          "author.email": email 
+       	}).sort( { "posted": -1 } ).toArray(function (err, list) {
+          callback(list);
+        });
+      });
+    })
 	},
 	
 	getContent: function(id, callback){

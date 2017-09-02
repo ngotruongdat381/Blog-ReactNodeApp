@@ -148,12 +148,11 @@ app.post('/getContent', function(req,res){
 app.post('/addComment', function (req, res) {
   var id = req.body.id;
   var comment = req.body.comment;
-    post.addComment(id, sessions.email, comment ,function(result){
-      res.send(result);
-    }); 
-
+  post.addComment(id, sessions.email, comment ,function(result){
+    res.send(result);
+  }); 
 })
 
 app.listen(process.env.PORT || 7777,function(){
-    console.log("Started listening on port", 7777);
+  console.log("Started listening on port", 7777);
 })

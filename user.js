@@ -17,7 +17,6 @@ module.exports = {
 	},
 	getUserInfo: function(email, callback){
 		MongoClient.connect(url, function(err, db){
-			
 			db.collection('user').findOne( { email : email 
 			},function(err, result){
 				if(result==null){

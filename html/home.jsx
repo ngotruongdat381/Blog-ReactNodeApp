@@ -28,8 +28,7 @@ class ShowProfile extends React.Component {
       email:'',
       password:'',
       id:''
-    };
-    
+    };  
   }
 
   componentDidMount(){
@@ -111,6 +110,7 @@ class AddPost extends React.Component {
         id:''
       };
     }
+
     componentDidMount() {
       ChangeStatus("addHyperLink");
       this.getPostWithId();
@@ -198,16 +198,16 @@ class ShowContent extends React.Component {
 
     //improve later
     showNewComment() {
-        const element = (
-          <div>
-            <div>{comment.email}</div>
-            <div>{comment}</div>
-          </div>
-        );
-        ReactDOM.render(
-          element,
-          document.getElementById('comment-box')
-        );
+      const element = (
+        <div>
+          <div>{comment.email}</div>
+          <div>{comment}</div>
+        </div>
+      );
+      ReactDOM.render(
+        element,
+        document.getElementById('comment-box')
+      );
     }
 
     addComment(){
@@ -263,40 +263,40 @@ class ShowContent extends React.Component {
       return (
         <div className="col-lg-8 col-md-10 mx-auto">
           <div className="form-area">  
-              <div role="form">
-                <br styles="clear:both" />               
-                <article>
-                  <header className="entry-header">
-                    <h1 className="entry-title">{this.state.title}</h1>    
-                  </header>
-                  <div className="entry-meta">
-                    <span className="byline">
-                      <i className="fa fa-user" aria-hidden="true"></i>
-                      <a>{this.state.authoremail}</a>     
-                    </span>
-                    <span className="published-on">
-                      <i className="fa fa-clock-o" aria-hidden="true"></i>
-                      <time className="entry-date published">{short_date}</time>  
-                    </span>
-                  </div>
+            <div role="form">
+              <br styles="clear:both" />               
+              <article>
+                <header className="entry-header">
+                  <h1 className="entry-title">{this.state.title}</h1>    
+                </header>
+                <div className="entry-meta">
+                  <span className="byline">
+                    <i className="fa fa-user" aria-hidden="true"></i>
+                    <a>{this.state.authoremail}</a>     
+                  </span>
+                  <span className="published-on">
+                    <i className="fa fa-clock-o" aria-hidden="true"></i>
+                    <time className="entry-date published">{short_date}</time>  
+                  </span>
+                </div>
 
-                  <div className="content">
-                    <div className="row">
-                        {this.state.subject.split("\n").map(function(item) {
-                        return (
-                          <span>
-                            {item}
-                            <br/>
-                          </span>
-                        )
-                      })}
-                    </div>
+                <div className="content">
+                  <div className="row">
+                      {this.state.subject.split("\n").map(function(item) {
+                      return (
+                        <span>
+                          {item}
+                          <br/>
+                        </span>
+                      )
+                    })}
                   </div>
-                </article>
-              </div>
+                </div>
+              </article>
+            </div>
 
-              <div className="comment" id="comment-box">
-                {this.props.useremail&&
+            <div className="comment" id="comment-box">
+              {this.props.useremail&&
                 <div className="card my-4">
                   <h5 className="card-header">Leave a Comment:</h5>
                   <div className="card-body">
@@ -308,171 +308,168 @@ class ShowContent extends React.Component {
                     </form>
                   </div>
                 </div>
-                }
+              }
 
-                {this.state.comments && this.state.comments.length > 0 &&
-                  this.state.comments.map(function(comment,index) {
-                    return <div className="media mb-4" key={index}  >
-                            <img className="d-flex mr-3 rounded-circle" src="https://placehold.it/50x50" alt=""/>
-                            <div className="media-body">
-                              <h5 className="mt-0">{comment.email}</h5>
-                              {comment.comment}
-                            </div>
-                            </div>
-                  }.bind(this))
-                }
-              </div>
+              {this.state.comments && this.state.comments.length > 0 &&
+                this.state.comments.map(function(comment,index) {
+                  return <div className="media mb-4" key={index}  >
+                          <img className="d-flex mr-3 rounded-circle" src="https://placehold.it/50x50" alt=""/>
+                          <div className="media-body">
+                            <h5 className="mt-0">{comment.email}</h5>
+                            {comment.comment}
+                          </div>
+                          </div>
+                }.bind(this))
+              }
+            </div>
           </div>
         </div>
       )
     }
 }
 
-
-
 class ShowPost extends React.Component {
-    constructor(props) {
-      super(props);
-      this.updatePost = this.updatePost.bind(this);
-      this.showPost = this.showPost.bind(this);
-      this.deletePost = this.deletePost.bind(this);
-      this.getPost = this.getPost.bind(this);
-      this.getPostWithUser = this.getPostWithUser.bind(this);
-      this.doShow = this.doShow.bind(this);
-      this.sort = this.sort.bind(this);
-      this.state = {
-        newest: true,
-        posts:[]
-      };
-    }
+  constructor(props) {
+    super(props);
+    this.updatePost = this.updatePost.bind(this);
+    this.showPost = this.showPost.bind(this);
+    this.deletePost = this.deletePost.bind(this);
+    this.getPost = this.getPost.bind(this);
+    this.getPostWithUser = this.getPostWithUser.bind(this);
+    this.doShow = this.doShow.bind(this);
+    this.sort = this.sort.bind(this);
+    this.state = {
+      newest: true,
+      posts:[]
+    };
+  }
 
-    updatePost(id){
-      hashHistory.push('/addPost/' + id);
-    }
+  updatePost(id){
+    hashHistory.push('/addPost/' + id);
+  }
 
-    showPost(id){
-      hashHistory.push('/post/' + id);
-    }
+  showPost(id){
+    hashHistory.push('/post/' + id);
+  }
 
-    deletePost(id){
-      if(confirm('Are you sure ?')){
-        var self = this;
-        axios.post('/deletePost', {
-          id: id
-        })
-        .then(function (response) {
-          self.getPost();
-        })
-        .catch(function (error) {
-          console.log('Error is ',error);
-        });
-      }
-    }
-
-    getPost(newest){
+  deletePost(id){
+    if(confirm('Are you sure ?')){
       var self = this;
-      axios.post('/getPost', {
-        newest: newest
+      axios.post('/deletePost', {
+        id: id
       })
       .then(function (response) {
-        //console.log('res is ',response);
-        self.setState({posts:response.data})
+        self.getPost();
       })
       .catch(function (error) {
-        console.log('error is ',error);
+        console.log('Error is ',error);
       });
     }
-    
-    getPostWithUser() {
-      var self = this;
-      axios.post('/getPostWithUser', {
-      })
-      .then(function (response) {
-        //console.log('res is ',response);
-        self.setState({posts:response.data})
-      })
-      .catch(function (error) {
-        console.log('error is ',error);
-      });
-    }
+  }
 
-    doShow() {
-      if (this.props.router.location.pathname == "/"){
-        //console.log("getHome");
-        ChangeStatus("homeHyperlink");
-        this.getPost();
-      }
-      else if (this.props.router.location.pathname == "/showMyPosts"){
-        //console.log("getPostWithUser");
-        ChangeStatus("wallHyperlink");
-        this.getPostWithUser();
-      }
-    }
+  getPost(newest){
+    var self = this;
+    axios.post('/getPost', {
+      newest: newest
+    })
+    .then(function (response) {
+      //console.log('res is ',response);
+      self.setState({posts:response.data})
+    })
+    .catch(function (error) {
+      console.log('error is ',error);
+    });
+  }
+  
+  getPostWithUser() {
+    var self = this;
+    axios.post('/getPostWithUser', {
+    })
+    .then(function (response) {
+      //console.log('res is ',response);
+      self.setState({posts:response.data})
+    })
+    .catch(function (error) {
+      console.log('error is ',error);
+    });
+  }
 
-    sort() {
-      this.setState({newest:!this.state.newest});
-      this.getPost(!this.state.newest);
+  doShow() {
+    if (this.props.router.location.pathname == "/"){
+      //console.log("getHome");
+      ChangeStatus("homeHyperlink");
+      this.getPost();
     }
-
-    componentWillReceiveProps(nextProps) {
-      if (nextProps.useremail != ""){
-        this.doShow();
-      }
+    else if (this.props.router.location.pathname == "/showMyPosts"){
+      //console.log("getPostWithUser");
+      ChangeStatus("wallHyperlink");
+      this.getPostWithUser();
     }
+  }
 
-    componentDidMount() {
+  sort() {
+    this.setState({newest:!this.state.newest});
+    this.getPost(!this.state.newest);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.useremail != ""){
       this.doShow();
     }
+  }
 
-    render() {
-      return(
-        <div className="col-lg-8 col-md-10 mx-auto">
-          {this.props.router.location.pathname == "/"&&
-            <div className="greeting">
-              <h1> Hi {this.props.useremail}! We got some new blogs for you </h1>
-            </div>
-          }
-          
-          {this.props.router.location.pathname == "/"&&
-          <button type="button" onClick={this.sort}  className="btn btn-primary pull-right floating-btn" title="Sort by chronological order">
-            <i className="fa fa-sort-amount-asc" aria-hidden="true"></i>
-          </button>
-          }
+  componentDidMount() {
+    this.doShow();
+  }
 
-          {this.state.posts.map(function(post,index) {
-              if (post.posted !== undefined) {
-                var sdate = (post.posted).toString();
-                var short_date = sdate.substring(0,10);
-              }
-              var content = post.subject;
-              content = post.subject.substring(0,700) + " ...";    
-              
-              return  <article className="post" key={index}>
-                        <header className="entry-header">
-                          <h1 className="entry-title" onClick={this.showPost.bind(this,post._id)}> {post.title}</h1>
-                        </header> 
-                        <div className="entry-content">
-                          {content}
-                        </div>
-                        <footer className="entry-footer">
-                          <div className="entry-meta">
-                            <span className="byline">
-                              <i className="fa fa-user" aria-hidden="true"></i>
-                              <a>{post.author.email}</a>     
-                            </span>
-                            <span className="published-on">
-                              <i className="fa fa-clock-o" aria-hidden="true"></i>
-                              <time className="entry-date published" datetime={short_date}>{short_date}</time>  
-                            </span>
-                          </div>
-                        </footer>
-                      </article>
-          }.bind(this))
+  render() {
+    return(
+      <div className="col-lg-8 col-md-10 mx-auto">
+        {this.props.router.location.pathname == "/"&&
+          <div className="greeting">
+            <h1> Hi {this.props.useremail}! We got some new blogs for you </h1>
+          </div>
         }
         
-      </div>
-      )
-    }
+        {this.props.router.location.pathname == "/"&&
+        <button type="button" onClick={this.sort}  className="btn btn-primary pull-right floating-btn" title="Sort by chronological order">
+          <i className="fa fa-sort-amount-asc" aria-hidden="true"></i>
+        </button>
+        }
+
+        {this.state.posts.map(function(post,index) {
+          if (post.posted !== undefined) {
+            var sdate = (post.posted).toString();
+            var short_date = sdate.substring(0,10);
+          }
+          var content = post.subject;
+          content = post.subject.substring(0,700) + " ...";    
+          
+          return  <article className="post" key={index}>
+                    <header className="entry-header">
+                      <h1 className="entry-title" onClick={this.showPost.bind(this,post._id)}> {post.title}</h1>
+                    </header> 
+                    <div className="entry-content">
+                      {content}
+                    </div>
+                    <footer className="entry-footer">
+                      <div className="entry-meta">
+                        <span className="byline">
+                          <i className="fa fa-user" aria-hidden="true"></i>
+                          <a>{post.author.email}</a>     
+                        </span>
+                        <span className="published-on">
+                          <i className="fa fa-clock-o" aria-hidden="true"></i>
+                          <time className="entry-date published" datetime={short_date}>{short_date}</time>  
+                        </span>
+                      </div>
+                    </footer>
+                  </article>
+        }.bind(this))
+      }
+    </div>
+    )
+  }
 }
 
 class Header extends React.Component {
@@ -567,23 +564,23 @@ class Layout extends React.Component {
   }
 
   render() {
-      return (
-          <div>
-              <Header useremail={this.state.useremail} logOut={this.logOut}/>
-              {React.cloneElement(this.props.children, {useremail: this.state.useremail})}
-          </div>
-      )
+    return (
+      <div>
+          <Header useremail={this.state.useremail} logOut={this.logOut}/>
+          {React.cloneElement(this.props.children, {useremail: this.state.useremail})}
+      </div>
+    )
   }
 }
 
 ReactDOM.render(
-    <Router history={hashHistory}>
-      <Route path="/" component={Layout}>
-        <IndexRoute component={ShowPost} />
-        <Route component={ShowPost} path="/showMyPosts"></Route>
-        <Route component={ShowContent} path="/post(/:id)"></Route>
-        <Route component={AddPost} path="/addPost(/:id)"></Route>
-        <Route component={ShowProfile} path="/showProfile"></Route>
-      </Route>
-    </Router>,
+  <Router history={hashHistory}>
+    <Route path="/" component={Layout}>
+      <IndexRoute component={ShowPost} />
+      <Route component={ShowPost} path="/showMyPosts"></Route>
+      <Route component={ShowContent} path="/post(/:id)"></Route>
+      <Route component={AddPost} path="/addPost(/:id)"></Route>
+      <Route component={ShowProfile} path="/showProfile"></Route>
+    </Route>
+  </Router>,
 document.getElementById('app'));
