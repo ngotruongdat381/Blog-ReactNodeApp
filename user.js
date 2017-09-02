@@ -16,17 +16,14 @@ module.exports = {
 		});
 	},
 	getUserInfo: function(email, callback){
-		console.log('getUserInfo - user.js')
 		MongoClient.connect(url, function(err, db){
 			
 			db.collection('user').findOne( { email : email 
 			},function(err, result){
 				if(result==null){
-					console.log('returning false')
 					callback(false)
 				}
 				else{
-					console.log('returning true')
 					callback(result);
 				}
 			});
@@ -54,15 +51,12 @@ module.exports = {
 	},
 	validateSignIn: function(email, password,callback){
 		MongoClient.connect(url, function(err, db){
-			
 			db.collection('user').findOne( { email : email ,password: password 
 			},function(err, result){
 				if(result==null){
-					console.log('returning false')
 					callback(false)
 				}
 				else{
-					console.log('returning true')
 					callback(true)
 				}
 			});

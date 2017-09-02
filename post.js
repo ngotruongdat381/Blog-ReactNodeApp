@@ -89,8 +89,8 @@ module.exports = {
 		})
 	},
 
-    getPost: function(newest, callback){
-		console.log(newest);
+    getPostSort: function(newest, callback){
+		//console.log(newest);
 		var s = -1;
 		if (newest != undefined && !newest) {
 			s = 1;
@@ -102,8 +102,31 @@ module.exports = {
                 });
              });
         })
-    },
-    
+	},
+	
+	getPost: function(callback){
+        MongoClient.connect(url, function(err, db){
+             db.collection(postDB_name, function (err, collection) {
+                collection.find().sort( { "posted": -1 } ).toArray(function (err, list) {
+                    callback(list);
+                });
+             });
+        })
+	},
+	
+	getPostSearch: function(text, callback){
+        MongoClient.connect(url, function(err, db){
+             db.collection(postDB_name, function (err, collection) {
+                collection.find(
+					{ "$text": { "$search": text } },
+					{ "score": { "$meta": "textScore" } }
+				).sort( { "score": { "$meta": "textScore" } } ).toArray(function (err, list) {
+                    callback(list);
+                });
+             });
+        })
+	},
+	
     getPostWithUser: function(email, callback){
         MongoClient.connect(url, function(err, db){
             db.collection(postDB_name, function (err, collection) {
@@ -117,7 +140,6 @@ module.exports = {
 	},
 	
 	getContent: function(id, callback){
-
 		MongoClient.connect(url, function(err, db){
 			 db.collection(postDB_name).findOne({
 			 	_id: new mongodb.ObjectID(id)

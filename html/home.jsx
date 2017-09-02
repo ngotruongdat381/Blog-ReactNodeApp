@@ -14,15 +14,6 @@ var ChangeStatus = function (activeLink) {
   if (document.getElementById(activeLink) != null) {
     document.getElementById(activeLink).className = "active";
   }
- 
-  
-  // $(document).ready(function () {
-  //   $('ul.navbar-nav li.nav-item').each(function()
-  //   {
-  //     $(this).attr('class', '');
-  //   });
-  //   $('ul.navbar-nav li# ' + activeLink).attr('class', 'active');
-  // });
 }
 
 class ShowProfile extends React.Component {
@@ -126,7 +117,6 @@ class AddPost extends React.Component {
     }
 
     addPost(){
-      console.log(this.props.params);
       var idpost = this.props.params.id;
       axios.post('/addPost', {
         title: this.state.title,
@@ -134,7 +124,7 @@ class AddPost extends React.Component {
         id: this.props.params.id
       })
       .then(function (response) {
-        console.log('reponse from add post is ',response);
+        //console.log('reponse from add post is ',response);
         hashHistory.push('/showMyPosts');
       })
       .catch(function (error) {
@@ -221,16 +211,14 @@ class ShowContent extends React.Component {
     }
 
     addComment(){
-      console.log("addComment");
       var id = this.props.params.id;
       axios.post('/addComment', {
         id:id,
         comment: this.state.comment
       })
       .then(function (response) {
-        console.log('reponse from add comment is ',response);
-        //hashHistory.push('/post/' + id);
-        window.location.reload();   //a bit slow => Improve later
+        //console.log('reponse from add comment is ',response);
+        window.location.reload();   //a bit slow 
       })
       .catch(function (error) {
         console.log(error);
@@ -244,7 +232,6 @@ class ShowContent extends React.Component {
         id: id
       })
       .then(function (response) {
-        console.log(response.data);
         if(response){
           self.setState({title:response.data.title});
           self.setState({subject:response.data.subject});
@@ -270,12 +257,9 @@ class ShowContent extends React.Component {
 
     render() {
       if (this.state.posted !== undefined) {
-        //console.log((new Date(this.state.posted)).toString());
         var sdate = (this.state.posted).toString();
         var short_date = sdate.substring(0,10);
       }
-      console.log("ShowContent - test", this.props.useremail);
-
       return (
         <div className="col-lg-8 col-md-10 mx-auto">
           <div className="form-area">  
@@ -298,8 +282,14 @@ class ShowContent extends React.Component {
 
                   <div className="content">
                     <div className="row">
-                        <p>{this.state.subject}</p>
-                      
+                        {this.state.subject.split("\n").map(function(item) {
+                        return (
+                          <span>
+                            {item}
+                            <br/>
+                          </span>
+                        )
+                      })}
                     </div>
                   </div>
                 </article>
@@ -332,7 +322,6 @@ class ShowContent extends React.Component {
                   }.bind(this))
                 }
               </div>
-
           </div>
         </div>
       )
@@ -386,7 +375,7 @@ class ShowPost extends React.Component {
         newest: newest
       })
       .then(function (response) {
-        console.log('res is ',response);
+        //console.log('res is ',response);
         self.setState({posts:response.data})
       })
       .catch(function (error) {
@@ -399,7 +388,7 @@ class ShowPost extends React.Component {
       axios.post('/getPostWithUser', {
       })
       .then(function (response) {
-        console.log('res is ',response);
+        //console.log('res is ',response);
         self.setState({posts:response.data})
       })
       .catch(function (error) {
@@ -408,14 +397,13 @@ class ShowPost extends React.Component {
     }
 
     doShow() {
-      console.log("this.props.Router:",this.props.router.location.pathname);
       if (this.props.router.location.pathname == "/"){
-        console.log("getHome");
+        //console.log("getHome");
         ChangeStatus("homeHyperlink");
         this.getPost();
       }
       else if (this.props.router.location.pathname == "/showMyPosts"){
-        console.log("getPostWithUser");
+        //console.log("getPostWithUser");
         ChangeStatus("wallHyperlink");
         this.getPostWithUser();
       }
@@ -426,54 +414,48 @@ class ShowPost extends React.Component {
       this.getPost(!this.state.newest);
     }
 
-    
-    // shouldComponentUpdate(nextProps) {
-    //   const differentNewest = this.props.title !== nextProps.title;
-    //   //const differentDone = this.props.done !== nextProps.done
-    //   return differentNewest;
-    // }
-
-    componentWillReceiveProps() {
-      console.log("componentWillReceiveProps");
-      this.doShow();
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.useremail != ""){
+        this.doShow();
+      }
     }
 
     componentDidMount() {
-      console.log("componentDidMount");
       this.doShow();
     }
 
     render() {
-      // console.log("path:",this.props.router.location.pathname);
-      // console.log("test", this.props.useremail);
       return(
         <div className="col-lg-8 col-md-10 mx-auto">
-          <div className="greeting">            
-            {this.props.router.location.pathname == "/"&&
+          {this.props.router.location.pathname == "/"&&
+            <div className="greeting">
               <h1> Hi {this.props.useremail}! We got some new blogs for you </h1>
-            }
-          </div>
-
-          <button type="button" onClick={this.sort}  className="btn btn-primary pull-right floating-btn" title="Sort by Oldest">
+            </div>
+          }
+          
+          {this.props.router.location.pathname == "/"&&
+          <button type="button" onClick={this.sort}  className="btn btn-primary pull-right floating-btn" title="Sort by chronological order">
             <i className="fa fa-sort-amount-asc" aria-hidden="true"></i>
           </button>
+          }
 
-          {
-            this.state.posts.map(function(post,index) {
+          {this.state.posts.map(function(post,index) {
               if (post.posted !== undefined) {
                 var sdate = (post.posted).toString();
                 var short_date = sdate.substring(0,10);
               }
+              var content = post.subject;
               if (this.props.router.location.pathname == "/"){
-                var short_content = post.subject.substring(0,700) + " ...";
+                var content = post.subject.substring(0,700) + " ...";
               }
-
+              console.log(content);    
+              
               return  <article className="post" key={index}>
                         <header className="entry-header">
                           <h1 className="entry-title" onClick={this.showPost.bind(this,post._id)}> {post.title}</h1>    
                         </header> 
                         <div className="entry-content">
-                          <p>{short_content}</p> 
+                          {content}
                         </div>
                       
                         <footer className="entry-footer">
@@ -502,8 +484,6 @@ class Header extends React.Component {
     super(props);
   }
   render() {
-    // console.log("location:",window.location);
-    // console.log("path:",window.location.pathname);
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -540,15 +520,9 @@ class Header extends React.Component {
                     <span className="sr-only">(current)</span>
                   </a>
                 </li>
-                {/* <li className="nav-item" id="wallHyperlink">
-                  <a className="nav-link" href="/#/showMyPosts">Wall</a>
-                </li> */}
                 <li className="nav-item" id="addHyperLink">
                   <a className="nav-link" href="/#/addPost">Add</a>
                 </li>
-                {/* <li className="nav-item" id="profileHyperlink">
-                  <a className="nav-link" href="/#/showProfile">Profile</a>
-                </li> */}
                 <li className="nav-item">
                   <a className="nav-link" onClick={this.props.logOut} href="#">Logout</a>
                 </li>
@@ -579,7 +553,7 @@ class Layout extends React.Component {
     })
     .then(function (response) {
       if(response){
-        console.log("data loaded: ", response.data.email);
+        //console.log("data loaded: ", response.data.email);
         self.setState({useremail:response.data.email})
       }
     })
@@ -593,12 +567,10 @@ class Layout extends React.Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount - checkSession");
     this.checkSession();
   }
 
   render() {
-    console.log(this.state.useremail);
       return (
           <div>
               <Header useremail={this.state.useremail} logOut={this.logOut}/>

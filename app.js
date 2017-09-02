@@ -19,9 +19,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/posts", function(req, res) {
+  //console.log(req.query);
+  if (req.query.searchtext == undefined){
     post.getPost(function(result){
         res.send(result);
     });
+  }
+  else {
+    post.getPostSearch(req.query.searchtext, function(result){
+        res.send(result);
+    });
+  }
 });
 
 app.get('/', function(req,res){
@@ -40,12 +48,6 @@ app.get('/home', function (req, res) {
   } else {
     console.log("# Username from session: "+ req.session.email);
   }
-  // if(sessions && sessions.email){
-  //   res.sendFile(__dirname + '/html/home.html');
-  // }
-  // else{
-  //   res.send('unauthorized');
-  // }
 })
 
 app.post('/signin', function (req, res) {
@@ -82,15 +84,12 @@ app.post('/addpost', function (req, res) {
   var title = req.body.title;
   var subject = req.body.subject;
   var id = req.body.id;
-  console.log('id is ',id);
   if(id == '' || id == undefined){
-    console.log('add');
     post.addPost(sessions.username, sessions.email, title, subject ,function(result){
       res.send(result);
     }); 
   }
   else{
-    console.log('update',title,subject);
     post.updatePost(id, title, subject ,function(result){
       res.send(result);
     }); 
@@ -115,7 +114,7 @@ app.post('/username', function(req, res){
 
 app.post('/getpost', function (req, res) {
   var newest = req.body.newest;
-  post.getPost(newest, function(result){
+  post.getPostSort(newest, function(result){
     res.send(result);
   });
 })
@@ -128,8 +127,6 @@ app.post('/deletePost', function(req,res){
 })
 
 app.post('/getProfile', function(req,res){
-  console.log('getProfile');
-  console.log(sessions.email);
   user.getUserInfo(sessions.email, function(result){
     res.send(result)
   })
