@@ -445,19 +445,15 @@ class ShowPost extends React.Component {
                 var short_date = sdate.substring(0,10);
               }
               var content = post.subject;
-              if (this.props.router.location.pathname == "/"){
-                var content = post.subject.substring(0,700) + " ...";
-              }
-              console.log(content);    
+              content = post.subject.substring(0,700) + " ...";    
               
               return  <article className="post" key={index}>
                         <header className="entry-header">
-                          <h1 className="entry-title" onClick={this.showPost.bind(this,post._id)}> {post.title}</h1>    
+                          <h1 className="entry-title" onClick={this.showPost.bind(this,post._id)}> {post.title}</h1>
                         </header> 
                         <div className="entry-content">
                           {content}
                         </div>
-                      
                         <footer className="entry-footer">
                           <div className="entry-meta">
                             <span className="byline">
