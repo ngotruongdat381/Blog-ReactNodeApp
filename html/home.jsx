@@ -313,7 +313,7 @@ class ShowContent extends React.Component {
                 {this.state.comments && this.state.comments.length > 0 &&
                   this.state.comments.map(function(comment,index) {
                     return <div className="media mb-4" key={index}  >
-                            <img className="d-flex mr-3 rounded-circle" src="http://placehold.it/50x50" alt=""/>
+                            <img className="d-flex mr-3 rounded-circle" src="https://placehold.it/50x50" alt=""/>
                             <div className="media-body">
                               <h5 className="mt-0">{comment.email}</h5>
                               {comment.comment}

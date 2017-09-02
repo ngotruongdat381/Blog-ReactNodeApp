@@ -71,7 +71,6 @@ module.exports = {
 	},
 
 	getPostWithId: function(id, callback){
-
 		MongoClient.connect(url, function(err, db){
 			 db.collection(postDB_name).findOne({
 			 	_id: new mongodb.ObjectID(id)
@@ -90,7 +89,6 @@ module.exports = {
 	},
 
     getPostSort: function(newest, callback){
-		//console.log(newest);
 		var s = -1;
 		if (newest != undefined && !newest) {
 			s = 1;
@@ -177,7 +175,6 @@ module.exports = {
 		  });
 		});
 	},
-
 }
 
 

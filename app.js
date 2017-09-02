@@ -1,21 +1,15 @@
 var express = require("express");
 var session = require('express-session');
-
 var path = require("path");
 var bodyParser = require("body-parser");
 var user = require('./user')
 var post = require('./post')
-
 var app = express();
-
-app.use(session({secret: 'my-secret'}));
 var sessions;
 
-
+app.use(session({secret: 'my-secret'}));
 app.use(express.static(path.join(__dirname,"/html")));
-
 app.use(bodyParser.json());
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/posts", function(req, res) {
@@ -39,7 +33,6 @@ app.get('/', function(req,res){
 app.get('/user', function(req,res){
   res.sendFile(__dirname + '/html/user.html');
 })
-
 
 app.get('/home', function (req, res) {
   res.sendFile(__dirname + '/html/index.html');
