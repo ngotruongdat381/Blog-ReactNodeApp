@@ -17,6 +17,9 @@ Website:
 4. Allows visitors to view post list, and sort them by created date.
 5. Seed data for posts and users.
 
+Existed account: admin@ntd.com
+Password: 1
+
 API:
 1. Provides a RESTful API for retrieve posts.
 2. Supports search for the above API.
